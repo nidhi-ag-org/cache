@@ -1,7 +1,9 @@
 import * as cache from "@actions/cache";
 import * as core from "@actions/core";
 
-import { RefKey } from "../constants";
+import { RefKey, Inputs } from "../constants";
+
+import {S3ClientConfig} from "@aws-sdk/client-s3";
 
 export function isGhes(): boolean {
     const ghUrl = new URL(
@@ -77,4 +79,30 @@ Otherwise please upgrade to GHES version >= 3.5 and If you are also using Github
         "An internal error has occurred in cache backend. Please check https://www.githubstatus.com/ for any ongoing issue in actions."
     );
     return false;
+}
+
+export function getInputS3ClientConfig(): S3ClientConfig | undefined {
+    const s3BucketName = core.getInput(Inputs.AWSS3Bucket)
+    if (!s3BucketName) {
+        return undefined
+    }
+
+    let s3config = {} as S3ClientConfig
+
+    const accessKeyId = core.getInput(Inputs.AWSAccessKeyId);
+    const secretAccessKey = core.getInput(Inputs.AWSSecretAccessKey);
+    const region = core.getInput(Inputs.AWSRegion);
+
+    if (accessKeyId && secretAccessKey) {
+        s3config['credentials'] = {
+            accessKeyId, secretAccessKey
+        }
+    }
+    if (region) {
+        s3config['region'] = region;
+    }
+
+    core.debug('Enable S3 backend mode.')
+
+    return s3config
 }

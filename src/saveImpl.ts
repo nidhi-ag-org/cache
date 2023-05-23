@@ -56,11 +56,16 @@ async function saveImpl(stateProvider: IStateProvider): Promise<number | void> {
             Inputs.EnableCrossOsArchive
         );
 
+        const s3BucketName = core.getInput(Inputs.AWSS3Bucket);
+        const s3config = utils.getInputS3ClientConfig();
+
         cacheId = await cache.saveCache(
             cachePaths,
             primaryKey,
             { uploadChunkSize: utils.getInputAsInt(Inputs.UploadChunkSize) },
-            enableCrossOsArchive
+            enableCrossOsArchive,
+            s3config,
+            s3BucketName
         );
 
         if (cacheId != -1) {
