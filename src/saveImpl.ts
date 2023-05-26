@@ -15,10 +15,12 @@ async function saveImpl(stateProvider: IStateProvider): Promise<number | void> {
     try {
         console.log("saveImpl line 16")
         if (!utils.isCacheFeatureAvailable()) {
+            console.log("saveImpl line 18")
             return;
         }
 
         if (!utils.isValidEvent()) {
+            console.log("saveImpl line 23")
             utils.logWarning(
                 `Event Validation Error: The event type ${
                     process.env[Events.Key]
@@ -34,6 +36,7 @@ async function saveImpl(stateProvider: IStateProvider): Promise<number | void> {
             core.getInput(Inputs.Key);
 
         if (!primaryKey) {
+            console.log("saveImpl line 39")
             utils.logWarning(`Key is not specified.`);
             return;
         }
@@ -43,6 +46,7 @@ async function saveImpl(stateProvider: IStateProvider): Promise<number | void> {
         const restoredKey = stateProvider.getCacheState();
 
         if (utils.isExactKeyMatch(primaryKey, restoredKey)) {
+            console.log("saveImpl line 49")
             core.info(
                 `Cache hit occurred on the primary key ${primaryKey}, not saving cache.`
             );
@@ -68,11 +72,15 @@ async function saveImpl(stateProvider: IStateProvider): Promise<number | void> {
             s3config,
             s3BucketName
         );
+        console.log("saveImpl line 75")
+        console.log("cacheId ", cacheId)
 
         if (cacheId != -1) {
             core.info(`Cache saved with key: ${primaryKey}`);
         }
     } catch (error: unknown) {
+        console.log("saveImpl line 82")
+        console.log("error", (error as Error).message)
         utils.logWarning((error as Error).message);
     }
     return cacheId;
