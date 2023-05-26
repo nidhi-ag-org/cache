@@ -13,6 +13,7 @@ process.on("uncaughtException", e => utils.logWarning(e.message));
 async function saveImpl(stateProvider: IStateProvider): Promise<number | void> {
     let cacheId = -1;
     try {
+        console.log("saveImpl line 16")
         if (!utils.isCacheFeatureAvailable()) {
             return;
         }
