@@ -17,6 +17,15 @@ inputs:
   aws-s3-bucket:
     description: 'An AWS S3 bucket to save cache'
     required: true
+  aws-access-key-id:
+    description: 'An AWS access key id to access the bucket'
+    required: false
+  aws-secret-access-key:
+    description: 'An AWS secret access key to access the bucket'
+    required: false
+  aws-region:
+    description: 'An AWS region where the bucket is located'
+    required: false
   enableCrossOsArchive:
     description: 'An optional boolean when enabled, allows windows runners to save or restore caches that can be restored or saved respectively on other platforms'
     default: 'false'
